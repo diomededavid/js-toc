@@ -1,8 +1,16 @@
 // Import stylesheets
 import './style.css';
 
-var tableOfContents = function (options) {
+var tableOfContents = (function () {
+  'use srict';
 
+  //
+  // Variables
+  //
+
+
+  let publicAPIs = {};
+  let headings, toc, settings;
 
   let defaults = {
     selector: 'h2',
@@ -11,7 +19,11 @@ var tableOfContents = function (options) {
     heading: 'Table of Contents'
   }
 
-  let headings, toc, settings;
+  //
+  // Methods
+  //
+
+
 
   /**
    * Get the heading ID (or create one if it doesn't have one)
@@ -19,8 +31,7 @@ var tableOfContents = function (options) {
    * @return {String}      The ID
    */
 
-  let getID = function (elem) {
-    // If the element doesn't have an ID create one
+  publicAPIs.getID = function(elem) {
     if (!elem.id) {
       elem.id = elem.textContent.replace(new RegExp('', 'g'), '-')
     }
@@ -30,7 +41,7 @@ var tableOfContents = function (options) {
   var createTOC = function () {
     let tocItems = Array.prototype.map.call(headings, function (heading) {
       if (settings.addLinks) {
-        return `<li><a href="#${getID(heading)}">${heading.textContent}</a></li>`;
+        return `<li><a href="#${publicAPIs.getID(heading)}">${heading.textContent}</a></li>`;
       }
       return `<li>${heading.textContent}</li>`;
 
@@ -41,29 +52,50 @@ var tableOfContents = function (options) {
       toc.innerHTML = `<h2>${settings.heading}</h2>
       <ul> ${tocItems.join('')}</ul>`
     };
+
+    settings.callback(toc);
   }
 
+  /**
+   * Initialize the plugin
+   * @param {Object} options User options
+   */
+
+  publicAPIs.init = function (options) {
+    // Merge user options into defaults
+    settings = Object.assign({}, defaults, options);
+
+    // Get all of the headings
+    let headings = document.querySelectorAll(settings.selector);
+    let toc = document.querySelector(settings.target);
+
+
+    // Create the table of Contentss
+    createTOC();
+
+  };
+
   //
-  // Intits an Event Listeners
+  // Return the public methods
   //
 
-  // Merge user options into defaults
-  settings = Object.assign({}, defaults, options);
+  return publicAPIs;
 
-  // Get all of the headings
-  let headings = document.querySelectorAll(settings.selector);
-  let toc = document.querySelector(settings.target);
-
-
-  // Create the table of Contentss
-  createTOC();
-}
+})();
 
 
 
-tableOfContents({
-  heading: 'Contents',
-  selector: 'h3',
-  target: '#contents',
-  addLinks: false,
-});
+// Get (or create) an ID for the heading
+//tableOfContents.getID(heading);
+
+
+// tableOfContents({
+//   heading: 'Contents',
+//   selector: 'h3',
+//   target: '#contents',
+//   addLinks: false,
+// });
+
+// Run the script
+
+tableOfContents.init();
