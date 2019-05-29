@@ -23,8 +23,6 @@ var tableOfContents = (function () {
   // Methods
   //
 
-
-
   /**
    * Get the heading ID (or create one if it doesn't have one)
    * @param  {Node}   elem The element
@@ -36,25 +34,25 @@ var tableOfContents = (function () {
       elem.id = elem.textContent.replace(new RegExp('', 'g'), '-')
     }
     return elem.id;
-  }
+  };
 
   var createTOC = function () {
     let tocItems = Array.prototype.map.call(headings, function (heading) {
-      if (settings.addLinks) {
+      if (settings.addLinks) 
         return `<li><a href="#${publicAPIs.getID(heading)}">${heading.textContent}</a></li>`;
-      }
+      
       return `<li>${heading.textContent}</li>`;
-
 
     });
 
     if (toc && tocItems.length > 0) {
-      toc.innerHTML = `<h2>${settings.heading}</h2>
-      <ul> ${tocItems.join('')}</ul>`
-    };
+      toc.innerHTML = `
+      <h2>${settings.heading}</h2>
+      <ul> ${tocItems.join('')}</ul>
+      `
+    }
 
-    settings.callback(toc);
-  }
+  };
 
   /**
    * Initialize the plugin
@@ -66,8 +64,8 @@ var tableOfContents = (function () {
     settings = Object.assign({}, defaults, options);
 
     // Get all of the headings
-    let headings = document.querySelectorAll(settings.selector);
-    let toc = document.querySelector(settings.target);
+    headings = document.querySelectorAll(settings.selector);
+    toc = document.querySelector(settings.target);
 
 
     // Create the table of Contentss
