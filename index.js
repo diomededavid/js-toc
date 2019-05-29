@@ -82,18 +82,4 @@ var tableOfContents = (function () {
 })();
 
 
-
-// Get (or create) an ID for the heading
-//tableOfContents.getID(heading);
-
-
-// tableOfContents({
-//   heading: 'Contents',
-//   selector: 'h3',
-//   target: '#contents',
-//   addLinks: false,
-// });
-
-// Run the script
-
 tableOfContents.init();
